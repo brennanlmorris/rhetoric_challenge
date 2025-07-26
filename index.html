@@ -1,0 +1,637 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Impromptu Rhetoric Challenge</title>
+    <link href="https://fonts.googleapis.com/css2?family=Abril+Fatface&family=Red+Hat+Text:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Red Hat Text', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+            background: #f8f9fa;
+            color: #3c3a47;
+            min-height: 100vh;
+            margin: 0;
+            padding: 0;
+            font-weight: 500;
+            line-height: 1.75;
+            -webkit-font-smoothing: antialiased;
+            -moz-osx-font-smoothing: grayscale;
+        }
+
+        .top-banner {
+            background: #f5f5f5;
+            padding: 0.75rem 0;
+            text-align: center;
+            font-size: 0.9rem;
+            font-weight: 500;
+            color: #3c3a47;
+            border-bottom: 1px solid #e0e0e0;
+        }
+
+        .main-content {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            padding: 2rem 20px;
+            min-height: calc(100vh - 50px);
+        }
+
+        .container {
+            text-align: center;
+            max-width: 1000px;
+            width: 100%;
+            background: white;
+            padding: 3rem 3rem 4rem 3rem;
+            border-radius: 12px;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+            animation: fadeIn 0.5s ease-out;
+        }
+
+        p, li, span {
+            font-weight: 500;
+            line-height: 1.75;
+            overflow-wrap: break-word;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(20px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        h1, h2, h3, h4 {
+            font-family: 'Abril Fatface', serif;
+            color: rgb(14, 12, 25);
+            margin: 0;
+            padding: 0;
+            font-weight: 400;
+            line-height: 1.2;
+            -webkit-font-smoothing: antialiased;
+            -moz-osx-font-smoothing: grayscale;
+        }
+
+        h1 {
+            font-size: 3rem;
+            margin-bottom: 2rem;
+            font-weight: 400;
+            padding-bottom: 10px;
+        }
+
+        .defend-heading {
+            font-family: 'Red Hat Text', sans-serif;
+            font-size: 1.5rem;
+            margin-bottom: 1.5rem;
+            font-weight: 400;
+            color: #3c3a47;
+        }
+
+        .advice-section h3 {
+            font-size: 3rem;
+            margin-bottom: 2rem;
+            text-align: center;
+            font-weight: 400;
+            padding-bottom: 10px;
+        }
+
+        .advice-content h4 {
+            font-size: 1.5rem;
+            margin-top: 2rem;
+            margin-bottom: 1rem;
+            font-weight: 400;
+        }
+
+        .prompt-card {
+            background: rgba(0, 0, 0, 0.08);
+            border-radius: 8px;
+            padding: 2rem;
+            margin-bottom: 2rem;
+            min-height: 120px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            border: 1px solid #e0e0e0;
+            transition: all 0.3s ease;
+        }
+
+        .prompt-card.active {
+            background: rgba(0, 0, 0, 0.08);
+            transform: scale(1.02);
+        }
+
+        .prompt-text {
+            font-size: 1.75rem;
+            font-weight: 500;
+            line-height: 1.5;
+            color: #000000;
+        }
+
+        .timer-display {
+            font-size: 5rem;
+            font-weight: 700;
+            margin: 2rem 0;
+            font-variant-numeric: tabular-nums;
+            transition: all 0.3s ease;
+            color: #3c3a47;
+        }
+
+        .timer-display.prep {
+            color: #d4a574;
+        }
+
+        .timer-display.speech {
+            color: #4a9d5f;
+        }
+
+        .timer-display.warning {
+            color: #d9534f;
+            animation: pulse 1s infinite;
+        }
+
+        @keyframes pulse {
+            0%, 100% { transform: scale(1); }
+            50% { transform: scale(1.05); }
+        }
+
+        .phase-indicator {
+            font-size: 1.2rem;
+            margin-bottom: 1rem;
+            text-transform: uppercase;
+            letter-spacing: 2px;
+            color: #3c3a47;
+            font-weight: 600;
+        }
+
+        .start-button {
+            background: #57cc99;
+            color: white;
+            border: none;
+            padding: 1rem 3rem;
+            font-size: 1.3rem;
+            font-weight: 600;
+            border-radius: 6px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.2);
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
+
+        .start-button:hover {
+            background: #4ab587;
+            transform: translateY(-2px);
+            box-shadow: 0 4px 10px rgba(0,0,0,0.3);
+        }
+
+        .start-button:active {
+            transform: translateY(0);
+        }
+
+        .start-button:disabled {
+            opacity: 0.5;
+            cursor: not-allowed;
+            transform: none;
+        }
+
+        .button-group {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 2rem;
+            margin-top: 1.5rem;
+            flex-wrap: wrap;
+        }
+
+        .secondary-button {
+            background: transparent;
+            color: #3c3a47;
+            border: 2px solid #57cc99;
+            padding: 0.7rem 2rem;
+            font-size: 1rem;
+            font-weight: 500;
+            border-radius: 6px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .secondary-button:hover {
+            background: #57cc99;
+            color: white;
+            transform: translateY(-1px);
+        }
+
+        .prompt-counter {
+            font-size: 0.9rem;
+            color: #6c757d;
+            font-weight: 500;
+        }
+
+        .progress-bar {
+            width: 100%;
+            height: 8px;
+            background: #e0e0e0;
+            border-radius: 4px;
+            margin-top: 2rem;
+            overflow: hidden;
+        }
+
+        .progress-fill {
+            height: 100%;
+            background: #3c3a47;
+            border-radius: 4px;
+            transition: width 0.1s linear;
+            width: 100%;
+        }
+
+        .hidden {
+            display: none;
+        }
+
+        .footer {
+            margin-top: 3rem;
+            text-align: center;
+            font-size: 0.85rem;
+            color: #6c757d;
+            letter-spacing: 1px;
+            text-transform: uppercase;
+        }
+
+        .advice-section {
+            margin-top: 3rem;
+            padding: 3rem;
+            max-width: 1000px;
+            width: 100%;
+            background: white;
+            border-radius: 12px;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+        }
+
+        .advice-section h3 {
+            font-size: 2rem;
+            margin-bottom: 1rem;
+            text-align: center;
+            font-weight: 400;
+        }
+
+        .advice-subtitle {
+            text-align: center;
+            font-size: 1rem;
+            color: #6c757d;
+            margin-bottom: 2rem;
+            font-style: italic;
+        }
+
+        .advice-content {
+            text-align: left;
+            max-width: 800px;
+            margin: 0 auto;
+        }
+
+        .advice-content h4 {
+            font-size: 1.5rem;
+            margin-top: 2rem;
+            margin-bottom: 1rem;
+            font-weight: 400;
+        }
+
+        .advice-content ul {
+            list-style: none;
+            padding: 0;
+            margin-bottom: 2rem;
+        }
+
+        .advice-content li {
+            margin-bottom: 1rem;
+            padding-left: 2rem;
+            position: relative;
+            line-height: 1.6;
+            color: #3c3a47;
+        }
+
+        .advice-content li:before {
+            content: "—";
+            position: absolute;
+            left: 0;
+            color: #3c3a47;
+        }
+
+        @media (max-width: 768px) {
+            h1 { font-size: 2rem; }
+            .timer-display { font-size: 4rem; }
+            .prompt-text { font-size: 1.2rem; }
+        }
+    </style>
+</head>
+<body>
+    <div class="top-banner">
+        Men's Academy Philosophy Symposium
+    </div>
+    
+    <div class="main-content">
+        <div class="container">
+        <h1>Impromptu Rhetoric Challenge</h1>
+        
+        <h2 class="defend-heading">Defend this proposition</h2>
+        
+        <div class="prompt-card" id="promptCard">
+            <p class="prompt-text" id="promptText">Press START to receive your philosophical proposition</p>
+        </div>
+        
+        <div class="phase-indicator hidden" id="phaseIndicator"></div>
+        <div class="timer-display hidden" id="timerDisplay">0:00</div>
+        
+        <button class="start-button" id="startButton">START CHALLENGE</button>
+        
+        <div class="button-group">
+            <button class="secondary-button" id="resetButton">Reset Prompts</button>
+            <span class="prompt-counter" id="promptCounter">Prompts remaining: 54/54</span>
+        </div>
+        
+        <div class="progress-bar hidden" id="progressBar">
+            <div class="progress-fill" id="progressFill"></div>
+        </div>
+    </div>
+    
+    <div class="advice-section">
+        <h3>Suggestions for impromptu or short-format speaking</h3>
+        <p class="advice-subtitle">These guidelines are relevant when needing to give short statements, such as in media interviews, "elevator pitches", and quick reaction.</p>
+        
+        <div class="advice-content">
+            <h4>Principles to consider</h4>
+            <ul>
+                <li><strong>Lead with the lede:</strong> State your main idea or argument upfront—don't bury the lede or your best material in the middle. What's the one thing you want people to take away—just say it.</li>
+                <li><strong>Control the frame:</strong> Frame / define key terms and concepts in ways that support your position (though within reason and usually subtly).</li>
+                <li><strong>Tell stories:</strong> Use concrete examples and relatable stories rather than abstract concepts—people remember narratives.</li>
+                <li><strong>Objection handling:</strong> Quickly recognize obvious counter-arguments, then refute or explain why they don't undermine your position.</li>
+                <li><strong>Start on common ground:</strong> If possible, lean into what your audience already accepts before introducing more controversial claims. How are you giving people what they care about?</li>
+                <li><strong>"So What?":</strong> Show why your argument matters to your audience's lives or values.</li>
+                <li><strong>Embrace strategic pauses:</strong> When you need thinking time, pause confidently rather than rushing—silence feels longer to you than to listeners.</li>
+            </ul>
+
+            <h4>Delivery notes</h4>
+            <ul>
+                <li><strong>Project confidence from word one:</strong> Start with conviction even if you're still formulating your argument—strong openings create momentum.</li>
+                <li><strong>Slow but energetic:</strong> Generally speak more deliberately than feels comfortable. But convey energy through posture, projection, and expression.</li>
+                <li><strong>Don't overthink.</strong></li>
+            </ul>
+
+            <h4>Elements to consider including</h4>
+            <ul>
+                <li><strong>1-2 key supporting points</strong> (keep it simple)</li>
+                <li><strong>Concrete, relatable examples</strong> (from everyday life, history, or shared experience)</li>
+                <li><strong>Brief acknowledgment of counter-arguments</strong> (show you understand the complexity)</li>
+                <li><strong>Clear relevance statement</strong> (why this matters to your audience)</li>
+            </ul>
+        </div>
+    </div>
+    
+        <footer class="footer">
+            <p>Philosophy Symposium</p>
+        </footer>
+    </div>
+
+    <script>
+        const prompts = [
+            "Democracy is the best form of government",
+            "A strong monarchy is the best form of government",
+            "Pet ownership is immoral",
+            "Happiness is the ultimate goal of human life",
+            "It is better to be hated than anonymous",
+            "It is better to be anonymous than hated",
+            "Technology makes us less human",
+            "Technology makes us more human",
+            "Privacy is more important than security",
+            "All human actions are fundamentally selfish",
+            "Beauty is entirely subjective",
+            "Competition is essential for progress",
+            "Competition is the root of evil",
+            "Tradition holds society back",
+            "Society requires commitment to tradition",
+            "Love is just a chemical reaction",
+            "Wealth inequality is necessary for society",
+            "Wealth inequality is the greatest challenge of our time",
+            "Human nature is fundamentally good",
+            "Human nature is fundamentally fallen",
+            "Ignorance is bliss",
+            "All truth is subjective",
+            "Altruism is the highest virtue",
+            "War is the father of all things",
+            "Happiness is a choice",
+            "Work gives life meaning",
+            "Wage work is inherently oppressive",
+            "Art should serve a social purpose",
+            "Art should exist purely for its own sake",
+            "Money is the root of all evil",
+            "Money enables human flourishing",
+            "Individual freedom matters more than social order",
+            "Social order matters more than individual freedom",
+            "Everyone deserves a second chance",
+            "Some people are beyond redemption",
+            "The majority is usually wrong",
+            "Pleasure is the highest good in life",
+            "People never truly change",
+            "We have a duty to be optimistic",
+            "Pessimism is more honest than optimism",
+            "Emotions make us human",
+            "Emotions cloud our judgment",
+            "Fame is always corrupting",
+            "Fame is the highest good",
+            "Success requires sacrifice",
+            "Success without happiness is meaningless",
+            "Rules are meant to be broken",
+            "Rules are what separate us from chaos",
+            "First impressions are usually accurate",
+            "The customer is always right",
+            "Peace is only possible through strength",
+            "Violence doesn't solve anything",
+            "Social media connects us",
+            "Social media isolates us"
+        ];
+
+        let availablePrompts = [...prompts];
+        let usedPrompts = [];
+        let timerInterval;
+        let currentPhase = 'idle';
+        let timeRemaining = 0;
+        let totalTime = 0;
+
+        const startButton = document.getElementById('startButton');
+        const timerDisplay = document.getElementById('timerDisplay');
+        const promptText = document.getElementById('promptText');
+        const promptCard = document.getElementById('promptCard');
+        const phaseIndicator = document.getElementById('phaseIndicator');
+        const progressBar = document.getElementById('progressBar');
+        const progressFill = document.getElementById('progressFill');
+
+        function getRandomPrompt() {
+            if (availablePrompts.length === 0) {
+                return "All prompts have been used! Click 'Reset Prompts' to start fresh.";
+            }
+            const index = Math.floor(Math.random() * availablePrompts.length);
+            const prompt = availablePrompts[index];
+            // Remove from available and add to used
+            availablePrompts.splice(index, 1);
+            usedPrompts.push(prompt);
+            updatePromptCounter();
+            return prompt;
+        }
+
+        function resetPrompts() {
+            availablePrompts = [...prompts];
+            usedPrompts = [];
+            updatePromptCounter();
+            if (currentPhase === 'idle') {
+                promptText.textContent = 'Press START to receive your philosophical proposition';
+            }
+        }
+
+        function updatePromptCounter() {
+            const counter = document.getElementById('promptCounter');
+            counter.textContent = `Prompts remaining: ${availablePrompts.length}/${prompts.length}`;
+        }
+
+        function formatTime(seconds) {
+            const mins = Math.floor(seconds / 60);
+            const secs = seconds % 60;
+            return `${mins}:${secs.toString().padStart(2, '0')}`;
+        }
+
+        function updateTimer() {
+            timerDisplay.textContent = formatTime(timeRemaining);
+            
+            // Update progress bar
+            const progress = ((totalTime - timeRemaining) / totalTime) * 100;
+            progressFill.style.width = `${100 - progress}%`;
+            
+            // Warning state for last 5 seconds
+            if (timeRemaining <= 5 && timeRemaining > 0) {
+                timerDisplay.classList.add('warning');
+            } else {
+                timerDisplay.classList.remove('warning');
+            }
+            
+            if (timeRemaining > 0) {
+                timeRemaining--;
+            } else {
+                clearInterval(timerInterval);
+                
+                if (currentPhase === 'prep') {
+                    // Start speech phase
+                    startSpeechPhase();
+                } else if (currentPhase === 'speech') {
+                    // Challenge complete
+                    endChallenge();
+                }
+            }
+        }
+
+        function startPrepPhase() {
+            // Check if we have prompts available
+            if (availablePrompts.length === 0) {
+                alert("No prompts available! Please reset the prompts first.");
+                return;
+            }
+            
+            currentPhase = 'prep';
+            timeRemaining = 25;
+            totalTime = 25;
+            
+            // Update UI
+            promptText.textContent = getRandomPrompt();
+            promptCard.classList.add('active');
+            phaseIndicator.textContent = 'Preparation Time';
+            phaseIndicator.classList.remove('hidden');
+            timerDisplay.classList.remove('hidden');
+            timerDisplay.classList.add('prep');
+            progressBar.classList.remove('hidden');
+            startButton.textContent = 'STOP CHALLENGE';
+            startButton.disabled = false;
+            
+            // Start timer
+            updateTimer();
+            timerInterval = setInterval(updateTimer, 1000);
+        }
+
+        function startSpeechPhase() {
+            currentPhase = 'speech';
+            timeRemaining = 75; // 1:15
+            totalTime = 75;
+            
+            // Update UI
+            phaseIndicator.textContent = 'Speech Time';
+            timerDisplay.classList.remove('prep');
+            timerDisplay.classList.add('speech');
+            
+            // Play a sound or visual indicator could go here
+            
+            // Start timer
+            updateTimer();
+            timerInterval = setInterval(updateTimer, 1000);
+        }
+
+        function endChallenge() {
+            currentPhase = 'idle';
+            
+            // Update UI
+            phaseIndicator.textContent = 'Challenge Complete!';
+            timerDisplay.textContent = '0:00';
+            timerDisplay.classList.remove('speech', 'warning');
+            progressBar.classList.add('hidden');
+            startButton.textContent = 'START NEW CHALLENGE';
+            startButton.disabled = false;
+            
+            // Could add celebration animation here
+        }
+
+        function resetChallenge() {
+            clearInterval(timerInterval);
+            currentPhase = 'idle';
+            
+            // Reset UI
+            promptText.textContent = 'Press START to receive your philosophical proposition';
+            promptCard.classList.remove('active');
+            phaseIndicator.classList.add('hidden');
+            timerDisplay.classList.add('hidden');
+            timerDisplay.classList.remove('prep', 'speech', 'warning');
+            progressBar.classList.add('hidden');
+            startButton.textContent = 'START CHALLENGE';
+            startButton.disabled = false;
+        }
+
+        const resetButton = document.getElementById('resetButton');
+        
+        resetButton.addEventListener('click', () => {
+            if (confirm('This will reset all prompts and make them available again. Are you sure?')) {
+                resetPrompts();
+            }
+        });
+
+        startButton.addEventListener('click', () => {
+            if (currentPhase === 'idle') {
+                startPrepPhase();
+            } else if (currentPhase === 'prep' || currentPhase === 'speech') {
+                if (confirm('Are you sure you want to abort the current challenge?')) {
+                    resetChallenge();
+                }
+            }
+        });
+
+        // Keyboard shortcut
+        document.addEventListener('keydown', (e) => {
+            if (e.code === 'Space' && currentPhase === 'idle') {
+                e.preventDefault();
+                startButton.click();
+            }
+        });
+
+        // Initialize counter on load
+        updatePromptCounter();
+    </script>
+</body>
+</html>
